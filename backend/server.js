@@ -36,13 +36,16 @@ app.post('/', async(req, res) => {
   res.send({success: true, result: findResult})
 })
 
-app.delete('/', async(req, res) => {
-  const password= req.body
+app.delete('/', async (req, res) => {
+  const { id } = req.body;  
+  if (!id) return res.status(400).send({ success: false, message: "ID is required" });
+
   const db = client.db(dbName);
-  const collection= db.collection('passwords');
-   const findResult = await collection.deleteOne({ id: id });
-  res.send({success: true, result: findResult})
-})
+  const collection = db.collection('passwords');
+  const findResult = await collection.deleteOne({ id: id });
+
+  res.send({ success: true, result: findResult });
+});
 
 
 app.listen(port, () => {
